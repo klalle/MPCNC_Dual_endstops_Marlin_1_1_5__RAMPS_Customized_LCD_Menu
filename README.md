@@ -59,3 +59,11 @@ I was going crazy when trying to access the menu objects I needed through the LC
   * Control
     * acceleration, jerk, speeds.....
 
+Use this with my modifyed V9 postprocessor for F360 found here: https://github.com/klalle/Marlin_RC7_LCD_Customization/tree/master/Files%20to%20modify/Post%20Processor 
+It retracts z to +30 and then moves back to X0Y0 and keeps the steppers on!
+remember this if you're cutting deeper than 30mm, then you'd like to change this to something higher or skip this part in the gcode!
+
+This is an example of the none-endstop version: 
+https://github.com/klalle/Marlin_RC7_LCD_Customization/tree/master/Example%20of%20use
+
+/Kalle

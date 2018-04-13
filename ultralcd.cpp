@@ -2904,8 +2904,8 @@ void kill_screen(const char* lcd_msg) {
 			MENU_ITEM_EDIT(int3, "Speed [%]", &feedrate_percentage, 10, 999);
 			
 			#if ENABLED(EEPROM_SETTINGS)
-				MENU_ITEM(function, "Store to EEPROM", Config_StoreSettings); //MSG_STORE_EPROM
-				MENU_ITEM(function, "Load from EEPROM", Config_RetrieveSettings); //MSG_LOAD_EPROM
+				MENU_ITEM(function, "Store to EEPROM", lcd_store_settings); //MSG_STORE_EPROM
+				MENU_ITEM(function, "Load from EEPROM", lcd_load_settings); //MSG_LOAD_EPROM
 			#endif
 			
 			MENU_ITEM(submenu2, MSG_CONTROL, lcd_control_menu); 

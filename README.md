@@ -28,8 +28,7 @@ I was going crazy when trying to access the menu objects I needed through the LC
   * Back
   * Move Axis
     * Set coordinates 
-        * -Set coordinates for X,Y,Z and then execute move
-      * X,Y,Z
+      * X,Y,Z (set coordinates for X,Y,Z and then execute move)
     * 10mm 
       * X,Y
     * 1mm 

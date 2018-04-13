@@ -8,7 +8,7 @@ I only use the MPCNC as a CNC for cutting stuff out, and not for 3D-printing, so
 
 I was going crazy when trying to access the menu objects I needed through the LCD, so I came up with a couple of improvements that customized the menu for me.
 
-####This is what I aimed for:
+This is what I aimed for:
 
 * Get rid of all junk I don’t use (I’m only using the machine as a CNC-router)
 * Reorder the menu to put the mostly used commands on top

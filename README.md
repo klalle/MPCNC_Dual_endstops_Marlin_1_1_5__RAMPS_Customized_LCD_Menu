@@ -1,0 +1,52 @@
+# MPCNC_Dual_endstops_Marlin_1_1_5__RAMPS_Customized_LCD_Menu
+My customized LCD-menu for the MPCNC now works with dual endstops
+
+This is a customization of the LCD-menu that's in the Marlin version that's configured to work with an MPCNC from vicious1.com
+The project version used is the: "DualDual_1_1_5" downloaded from the Firmware-page
+
+I only use the MPCNC as a CNC for cutting stuff out, and not for 3D-printing, so all of those settings are stripped from the menu. 
+
+I was going crazy when trying to access the menu objects I needed through the LCD, so I came up with a couple of improvements that customized the menu for me.
+
+####This is what I aimed for:
+
+Get rid of all junk I don’t use (I’m only using the machine as a CNC-router)
+Reorder the menu to put the mostly used commands on top
+Confirm functions to not accedently run the wrong function
+Access the z-probe offset from the LCD-menu
+  The height of the piece of metal I let the tool go down against to probe for z (connected to GND and z-min)
+Make a temporary Z-offset-menu item
+  Useful if e.g. an engraving ends up too shallow – just make a temporary z-offset of -0.5 mm and run the same file again (make sure to not lose X and Y!!)
+  So that you don’t have to alter the z-probe offset all the time (the probe is most likely the same one...!)
+“Go to home” command in menu
+Set current position to home (without offset) menu item
+Make the 2nd option on a submenu pre-selected
+  If I e.g. enter the submenu “Move Axis” from the “Prep-menu”– most likely my next action won’t be to go back to the prep-menu, but to press the first real option (2nd option)
+####And this is my custom menu that I ended up with: 
+
+Startscreen
+Back
+Move Axis
+0.1mm
+Z,X,Y
+1mm
+Z,X,Y
+10mm
+X,Y
+Probe for Z0
+Zero only Z
+Zero All
+Print from SD
+bla bla bla
+Confirmation before it starts to run a file!
+Go To Home
+All/X/Y/Z
+Disable steppers
+Temp Z offset
+Speed [%]
+Z Homing offset
+Make this home
+Store to EEPROM
+LOAD from EEPROM
+Control
+acceleration, jerk, speeds.....

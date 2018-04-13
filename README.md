@@ -8,7 +8,7 @@ I only use the MPCNC as a CNC for cutting stuff out, and not for 3D-printing, so
 
 I was going crazy when trying to access the menu objects I needed through the LCD, so I came up with a couple of improvements that customized the menu for me.
 
-This is what I aimed for:
+#### This is what I aimed for:
 
 * Get rid of all junk I don’t use (I’m only using the machine as a CNC-router)
 * Reorder the menu to put the mostly used commands on top
@@ -22,9 +22,8 @@ This is what I aimed for:
 * Set current position to home (without offset) menu item
 * Make the 2nd option on a submenu pre-selected
   * If I e.g. enter the submenu “Move Axis” from the “Prep-menu”– most likely my next action won’t be to go back to the prep-menu, but to * press the first real option (2nd option)
-####And this is my custom menu that I ended up with: 
 
-####And this is my custom menu that I ended up with: <br>
+#### And this is my custom menu that I ended up with: <br>
 * Startscreen
   * Back
   * Move Axis

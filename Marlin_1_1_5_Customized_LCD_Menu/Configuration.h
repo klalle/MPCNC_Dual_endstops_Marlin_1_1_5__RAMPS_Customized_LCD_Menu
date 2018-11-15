@@ -771,8 +771,8 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 200
-#define Y_BED_SIZE 200
+#define X_BED_SIZE 455 //Kalle
+#define Y_BED_SIZE 335 //Kalle
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
@@ -783,7 +783,7 @@
 #define Z_MAX_POS 200
 
 // If enabled, axes won't move below MIN_POS in response to movement commands.
-#define MIN_SOFTWARE_ENDSTOPS
+//#define MIN_SOFTWARE_ENDSTOPS
 // If enabled, axes won't move above MAX_POS in response to movement commands.
 //#define MAX_SOFTWARE_ENDSTOPS //mpcnc
 

@@ -9,7 +9,7 @@ Buggs I had to find/overcome:
   *  I tried with an USB-RS232 dongle @baud 250000 and could not get the gcode "M117 Test" to be displayed on the LCD, but got the RX-output to be displayed (=correct baud)
     * Setting up serial in ubuntu to baud 250000 was not as easy as it should:
       * $ setserial -a /dev/ttyUSB2 spd_cust
-      * s etserial -a /dev/ttyUSB2 divisor 96
+      * $ setserial -a /dev/ttyUSB2 divisor 96
       * $ sudo putty 
         * Session: /dev/ttyUSB0, Speed: 38400, Serial
         * Terminal/Implicit CR in every LF

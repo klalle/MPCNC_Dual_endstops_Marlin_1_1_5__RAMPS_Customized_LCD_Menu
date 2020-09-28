@@ -6,7 +6,7 @@ I thought this would be a piece of cake, but as always things didn't work as exp
 
 #### Buggs I had to find/overcome: 
 * The Mega 2560 did not receive anything send on the RX0-serial port (TX works, but not RX?) This made the use of AUX1 on the Ramps useless...
-  *  I tried with an USB-RS232 dongle @baud 250000 and could not get the gcode "M117 Test" to be displayed on the LCD, but got the RX-output to be displayed (=correct baud)
+  *  I tried with an USB-RS232 dongle @baud 250000 and could not get the gcode "M117 Test" to be displayed on the LCD, but got the TX-output to be displayed (=correct baud)
     * Setting up serial in ubuntu to baud 250000 was not as easy as it should:
       * $ setserial -a /dev/ttyUSB2 spd_cust
       * $ setserial -a /dev/ttyUSB2 divisor 96

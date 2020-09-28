@@ -1,5 +1,6 @@
 #include <Arduino.h>
 // #include <SoftwareSerial.h>
+
 // These constants won't change. They're used to give names to the pins used:
 // user configurable options
 const int treshold_x = 50; // increase this value, if x-axis of joystick is not giving zero values when idle. Keep values between 300 and 0. Decrease to get joystick act more sensible.
@@ -25,7 +26,7 @@ const int home_z=PIN_BUTTON_E; // home_z button pin (E)
 const int active_mode_toggle = PIN_BUTTON_J; // joystick switch pin (speen or z)
 
 
-boolean z_mode = false; //move z-axis if true, default is xy
+boolean z_mode = true; //move z-axis if true
 boolean hxy = false; //define buttons_presed variables
 boolean hz = false;
 boolean rc = false;
@@ -41,15 +42,22 @@ String X_command = "";
 String Y_command = "";
 String Z_command = "";
 String distance = "1.0 ";
+String Z_distance = "1.0 ";
+
+int XY_Feedrate = 2000;
+int Z_Feedrate = 300;
+
 int modeToggle=1; // set 0.1mm,1, 10, 100
 
-String inputString = "";         // a string to hold incoming data
-boolean stringComplete = false;  // whether the string is complete
+//String inputString = "";         // a string to hold incoming data
+//boolean stringComplete = false;  // whether the string is complete
 
 bool modeChanged=true;
 
+int minTimeToReleaseBtnDelay = 50;
 
-bool firstXMove=true;
+bool firstXMoveLeft=true;
+bool firstXMoveRight=true;
 int getAverage(int pin){
   int a =0;
   for(int i=0;i<10;i++){
@@ -63,7 +71,7 @@ void resetCoordinates(){
   //Serial.begin(baud_rate); //open serial port
   Serial.println("G92 X0 Y0 Z0");
   Serial.println("M300 S300 P1000");
-  Serial.println("M117 Home is here!");
+  Serial.println("M117 Home is set!");
   //Serial.end();//close serial port to avoid problems with Octoprint
   delay(3000);
   modeChanged=true; //resets label...
@@ -85,33 +93,24 @@ void setup() {
   zeroState_x = getAverage(x_Pin);
   zeroState_y = getAverage(y_Pin);
 
-  // Serial.begin(baud_rate); //open serial port
-  // Serial.print("zeroState_x: ");
-  // Serial.println(zeroState_x);
-
-  // Serial.print("zeroState_y: ");
-  // Serial.println(zeroState_y);
-
-  // Serial.flush();
-  // Serial.end();//close serial port to avoid problems with Octoprint
 }
 
 void loop() {
   
-
   hxy = digitalRead(home_xy);
   hz = digitalRead(home_z);
   
   if (digitalRead(active_mode_toggle)==LOW)
   {
     modeChanged=true;
+
     int c=0;
     unsigned long startedWaiting = millis();
     while(digitalRead(active_mode_toggle)==LOW && millis() - startedWaiting <= 1500){
       delay(10);
       c++;
     }
-    if(c>150-1){ //long press => z-mode switch
+    if(c>150-1){ //long press => z-mode switch (up and down btns = Y instead of Z...)
       z_mode=!z_mode;
       modeToggle=1;
     }
@@ -122,44 +121,54 @@ void loop() {
       }
     }
   }
-  int moveTime=0;
-  switch(modeToggle) {
-    case 0:
-      distance="0.10"; //set movement to 0.1mm
-      moveTime=0.1/(1000/60)*1000;
-      break;
-    case 1: 
-      distance="1.0"; //set movement to 1mm
-      moveTime=1.0/(1000/60)*1000;
-      break;  
-    case 2: 
-      distance="10.0"; //set movement to 10mm
-      moveTime=10.0/(1000/60)*1000;
-      break;  
-    case 3: 
-      if (z_mode) {// maximum Z-axis movement is 20mm not 100. We don't want to shoot it out of the MPCNC!
-        distance="20.0"; //set movement to 20mm
-        moveTime=20.0/(1000/60)*1000;
-      }else{
-        distance="100.0"; //set movement to 100
-        moveTime=100.0/(1000/60)*1000; //100mm, / F1000[mm/min]/60[s/min]*1000[ms/s]
-      }
-      break;  
-  }
+  
+  int XY_moveTime=0;
+  int Z_moveTime=0;
+
   if(modeChanged){
     modeChanged=false;
+    switch(modeToggle) {
+      case 0:
+        distance="0.10"; //set movement to 0.1mm
+        XY_moveTime=0.1/(XY_Feedrate/60)*1000;
+        Z_moveTime =0.1/(Z_Feedrate/60)*1000;
+        break;
+      case 1: 
+        distance="1.0"; //set movement to 1mm
+        XY_moveTime=1.0/(XY_Feedrate/60)*1000;
+        Z_moveTime =1.0/(Z_Feedrate/60)*1000;
+        break;  
+      case 2: 
+        distance="10.0"; //set movement to 10mm
+        XY_moveTime=10.0/(XY_Feedrate/60)*1000;
+        Z_moveTime =10.0/(Z_Feedrate/60)*1000;
+        break;  
+      case 3: 
+          Z_distance = "20.0";// maximum Z-axis movement is 20mm not 100. We don't want to shoot it out of the MPCNC!
+          Z_moveTime = 20.0/(Z_Feedrate/60)*1000;
+          distance="100.0"; //set movement to 100
+          XY_moveTime=100.0/(XY_Feedrate/60)*1000; //100mm, / F1000[mm/min]/60[s/min]*1000[ms/s]
+        break;  
+    }
+    if(modeToggle<3 && z_mode)
+      Z_distance=distance;
+
     if(z_mode){
-      Serial.print("M117 Z-move:");
-      Serial.println(distance);
-      while(digitalRead(active_mode_toggle)==LOW){} //wait till released...
+      Serial.print("M117 Joystick XY:");
+      Serial.print(distance);
+      Serial.print("mm Z:");
+      Serial.print(distance);
+      Serial.println("mm");
     }
     else
     {
-      Serial.print("M117 XY-move:");
+      Serial.print("M117 Joystick XY:");
       Serial.println(distance);
+      Serial.println("mm");
     }
+    while(digitalRead(active_mode_toggle)==LOW){} //wait till released...
   }
- // default
+
   X_command =" X0";
   Y_command =" Y0";
   Z_command =" Z0";
@@ -170,8 +179,8 @@ void loop() {
   bool down_btn = digitalRead(PIN_BUTTON_C)==LOW;
 
   if (left_btn){
-    if(firstXMove){
-      firstXMove=false;
+    if(firstXMoveLeft){ //check if both left and right is pressed => reset coordinates
+      firstXMoveLeft=false;
       delay(500);
       if(digitalRead(PIN_BUTTON_B)==LOW && digitalRead(PIN_BUTTON_D)==LOW) 
         resetCoordinates();
@@ -182,11 +191,11 @@ void loop() {
       X_command = String(" X-" + distance);
   }
   else
-    firstXMove=true;
+    firstXMoveLeft=true;
 
   if(right_btn){
-    if(firstXMove){
-      firstXMove=false;
+    if(firstXMoveRight){//check if both left and right is pressed => reset coordinates
+      firstXMoveRight=false;
       delay(500);
       if(digitalRead(PIN_BUTTON_D)==LOW && digitalRead(PIN_BUTTON_B)==LOW) 
         resetCoordinates();
@@ -197,83 +206,77 @@ void loop() {
       X_command = String(" X" + distance);
   }
   else
-    firstXMove=true;
+    firstXMoveRight=true;
     
   if(up_btn){
-    Y_command = String(" Y" + distance);
-    Z_command = String(" Z" + distance);
+    if(z_mode)
+      Z_command = String(" Z" + Z_distance);
+    else
+      Y_command = String(" Y" + distance);
   }
   if(down_btn){
-    Y_command = String(" Y-" + distance);
-    Z_command = String(" Z-" + distance);
+    if(z_mode)
+      Z_command = String(" Z-" + Z_distance);
+    else
+      Y_command = String(" Y-" + distance);
   }
 
   // read the analog and digital in values:
   x = analogRead(x_Pin); 
-  if (x < zeroState_x-treshold_x) {
+  if (x < zeroState_x-treshold_x)
     X_command = String(" X-" + distance);
-  }
-  else if (x > zeroState_x+treshold_x){
+  else if (x > zeroState_x+treshold_x)
     X_command = String(" X" + distance);
-  }
 
   y = analogRead(y_Pin);
-  if (y < zeroState_y-treshold_y){
+  if (y < zeroState_y-treshold_y)
     Y_command = String(" Y-" + distance);
-    Z_command = String(" Z-" + distance);
-  }
   else if (y > zeroState_y+treshold_y)
-  {
     Y_command = String(" Y" + distance);
-    Z_command = String(" Z" + distance);
-  }
 
-  if (z_mode){
-    if(Z_command !=" Z0"){
-      //Serial.begin(baud_rate); //open serial port
-      Serial.println("G91");
-      Serial.print("G1");
-      Serial.print(Z_command);
-      Serial.println(" F200");
-      Serial.println("G90");
-      delay(moveTime*5+100);
-    }
-   }else  {
-     if(X_command !=" X0" || Y_command !=" Y0"){
-      //Serial.begin(baud_rate); //open serial port
-      Serial.println("G91");
-      Serial.print("G1");
-      Serial.print(X_command);
-      Serial.print(Y_command);
-      Serial.println(" F1000");
-      Serial.println("G90");
-      delay(moveTime+100);
-     }
+  if(Z_command !=" Z0"){
+    Serial.println("G91");
+    Serial.print("G1");
+    Serial.print(Z_command);
+    Serial.print(" F");
+    Serial.println(Z_Feedrate);
+    Serial.println("G90");
+    if(Z_moveTime<minTimeToReleaseBtnDelay)
+      delay(minTimeToReleaseBtnDelay);
+    else
+      delay(Z_moveTime);
+  }
+  if(X_command !=" X0" || Y_command !=" Y0"){
+    Serial.println("G91");
+    Serial.print("G1");
+    Serial.print(X_command);
+    Serial.print(Y_command);
+    Serial.print(" F");
+    Serial.println(XY_Feedrate);
+    Serial.println("G90");
+    if(XY_moveTime<minTimeToReleaseBtnDelay)
+      delay(minTimeToReleaseBtnDelay);
+    else
+      delay(XY_moveTime);
   }
   
- if (hxy==LOW) {
-    //Serial.begin(baud_rate); //open serial port
+  if (hxy==LOW) {
     Serial.println("G28 X Y");
     Serial.println("M117 Homing XY...");
     modeChanged=true; //resets label...
     delay(3000);
- }; 
- 
- if (hz==LOW)
- {
-   //Serial.begin(baud_rate);//open serial port
+  }
+  
+  if (hz==LOW)
+  {
     Serial.println("G28 Z");
     Serial.println("M117 Homing Z...");
     modeChanged=true; //resets label...
     delay(3000);
- };
+  }
  
- 
- 
-  // wait 350 milliseconds before the next loop to avoid too many moves cueing up
-
-  // if (stringComplete) {
-  //   Serial.println(inputString);
+  // if (stringComplete) { //if received: debug to software serial USB-adapter
+  //   SoftwareSerial.println(inputString);
   //   // clear the string:
   //   inputString = "";
   //   stringComplete = false;

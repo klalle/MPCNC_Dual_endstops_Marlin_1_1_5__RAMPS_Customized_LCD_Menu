@@ -199,7 +199,7 @@ void Endstops::report_state() {
     SERIAL_EOL();
 
     #if ENABLED(ULTRA_LCD)
-      lcd_status_printf_P(0, PSTR(MSG_LCD_ENDSTOPS " %c %c %c %c"), chrX, chrY, chrZ, chrP);
+      //lcd_status_printf_P(0, PSTR(MSG_LCD_ENDSTOPS " %c %c %c %c"), chrX, chrY, chrZ, chrP); //Kalle (tar bort texten "Endstop X" när man går negativa tal...)
     #endif
 
     hit_on_purpose();

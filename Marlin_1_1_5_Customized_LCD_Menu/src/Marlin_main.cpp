@@ -13570,6 +13570,14 @@ void setup() {
 
   lcd_init();
 
+  //Tell Marlin that we know where all axis are Kalle:
+  axis_known_position[Z_AXIS] = true; //Otherwise they'll blink
+  axis_known_position[X_AXIS] = true;
+  axis_known_position[Y_AXIS] = true;
+  axis_homed[Z_AXIS] = true; //Otherwise they'll blink "?"
+  axis_homed[X_AXIS] = true;
+  axis_homed[Y_AXIS] = true;
+
   #ifndef CUSTOM_BOOTSCREEN_TIMEOUT
     #define CUSTOM_BOOTSCREEN_TIMEOUT 2500
   #endif

@@ -2435,6 +2435,15 @@ void kill_screen(const char* lcd_msg) {
    * Remember to set the "Z Homing offset" to the height of the metal block first!
    */
    
+  static void simulateHomed(){
+    //Tell Marlin that we know where all axis are
+    axis_known_position[Z_AXIS] = true; //Otherwise they'll blink
+    axis_known_position[X_AXIS] = true;
+    axis_known_position[Y_AXIS] = true;
+    axis_homed[Z_AXIS] = true; //Otherwise they'll blink "?"
+    axis_homed[X_AXIS] = true;
+    axis_homed[Y_AXIS] = true;
+  }
    
   const char* HomeZText;
   int lastEncPos = 0;
@@ -2457,13 +2466,7 @@ void kill_screen(const char* lcd_msg) {
         enqueue_and_echo_commands_P(PSTR("G1 F300 Z5 X0.1 Y0.1")); //Activate all steppers! 
         enqueue_and_echo_commands_P(PSTR("G1 F300 X0 Y0")); //Return to 0 
         
-        //Tell Marlin that we know where all axis are
-        axis_known_position[Z_AXIS] = true; //Otherwise they'll blink
-        axis_known_position[X_AXIS] = true;
-        axis_known_position[Y_AXIS] = true;
-        axis_homed[Z_AXIS] = true; //Otherwise they'll blink "?"
-        axis_homed[X_AXIS] = true;
-        axis_homed[Y_AXIS] = true;
+        simulateHomed();
         
         //Retur to status screen
         lcd_return_to_status();
@@ -2813,7 +2816,7 @@ void kill_screen(const char* lcd_msg) {
     END_MENU();
   }*/
 	static void lcd_prepare_menu() {
-  
+    
     START_MENU();
     //
     // ^ Main
@@ -2872,7 +2875,7 @@ void kill_screen(const char* lcd_msg) {
 							MENU_ITEM(function, MSG_STOP_PRINT, lcd_sdcard_stop);
 						}
 					else {
-						MENU_ITEM(submenu2, MSG_CARD_MENU, lcd_sdcard_menu);
+						MENU_ITEM(submenu2, "Run From SD", lcd_sdcard_menu);
 
 						#if !PIN_EXISTS(SD_DETECT)
 							MENU_ITEM(gcode, "Mount card", PSTR("M21"));  // SD-card changed by user

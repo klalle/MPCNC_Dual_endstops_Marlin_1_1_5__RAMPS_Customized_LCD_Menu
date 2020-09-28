@@ -25,7 +25,7 @@ I thought this would be a piece of cake, but as always things didn't work as exp
 
 #### Usage:
 * Upload sketch to UNO
-* Connect the joystick shield RX/TX (straight above the UNO RX/TX) to the Ramps Zmin/Zmax [D18/D19](https://m.media-amazon.com/images/S/aplus-media/sc/4dedd672-6684-42a1-88e2-8fe3860f3563.__CR0,0,970,600_PT0_SX970_V1___.jpg) and the 5V/GND to Ramps 5V/GND (just underneath the zmin/zmax)
+* Connect the joystick shield RX/TX (straight above the UNO RX/TX) to the Ramps Zmin/Zmax [D18/D19](https://m.media-amazon.com/images/S/aplus-media/sc/4dedd672-6684-42a1-88e2-8fe3860f3563.__CR0,0,970,600_PT0_SX970_V1___.jpg) (at least the UNO TX and the Ramps D19) and the 5V/GND to Ramps 5V/GND (just underneath the zmin/zmax)
 
 #### Here's a list of what I have programed it to do: 
 * Joystick move = X and Y-moves

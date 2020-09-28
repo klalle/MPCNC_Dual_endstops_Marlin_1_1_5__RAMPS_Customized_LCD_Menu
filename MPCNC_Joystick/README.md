@@ -4,7 +4,7 @@ I had [this Joystick module](https://www.google.com/search?safe=active&channel=f
 
 I thought this would be a piece of cake, but as always things didn't work as expected from the beguining...
 
-Buggs I had to find/overcome: 
+#### Buggs I had to find/overcome: 
 * The Mega 2560 did not receive anything send on the TX0-serial port (RX works, but not TX?) This made the use of AUX1 on the Ramps useless...
   *  I tried with an USB-RS232 dongle @baud 250000 and could not get the gcode "M117 Test" to be displayed on the LCD, but got the RX-output to be displayed (=correct baud)
     * Setting up serial in ubuntu to baud 250000 was not as easy as it should:
@@ -23,11 +23,11 @@ Buggs I had to find/overcome:
     * Finally grabbed the multimeter and found out that the TX on the joystick shield that I was using had an voltage devider connected to it to take it down to something that an nrf24L01 wanted....... 
     * Connectin straight to the TX-pin on the shield was the key to get it working!
 
-Usage:
+#### Usage:
 * Upload sketch to UNO
 * Connect the joystick shield RX/TX (straight above the UNO RX/TX) to the Ramps Zmin/Zmax [D18/D19](https://m.media-amazon.com/images/S/aplus-media/sc/4dedd672-6684-42a1-88e2-8fe3860f3563.__CR0,0,970,600_PT0_SX970_V1___.jpg) and the 5V/GND to Ramps 5V/GND (just underneath the zmin/zmax)
 
-Here's a list of what I have programed it to do: 
+#### Here's a list of what I have programed it to do: 
 * Joystick move = X and Y-moves
 * Joystick btn (click down) changes move distances (0.1, 1, 10, 100mm)
   * Long press => changes between normal mode (up down btns = Z) and XY-only-mode (makes buttons up/down controll Y instead of Z)

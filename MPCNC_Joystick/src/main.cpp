@@ -123,8 +123,11 @@ bool isPressed(int pin){
 
 void loop() {
   if(isPressed(btnActivated)){ //reversed... ON=high
+  //TODO set led-pins
     delay(20);
     return;
+  }else{
+    //TODO set led-pins
   }
   if (isLongPressed(home_xy))
   {
@@ -166,22 +169,26 @@ void loop() {
         distance="0.10"; //set movement to 0.1mm
         XY_moveTime=0.1/(XY_Feedrate/60)*1000;
         Z_moveTime =0.1/(Z_Feedrate/60)*1000;
+        //TODO set led-pins
         break;
       case 1: 
         distance="1.0"; //set movement to 1mm
         XY_moveTime=1.0/(XY_Feedrate/60)*1000;
         Z_moveTime =1.0/(Z_Feedrate/60)*1000;
+        //TODO set led-pins
         break;  
       case 2: 
         distance="10.0"; //set movement to 10mm
         XY_moveTime=10.0/(XY_Feedrate/60)*1000;
         Z_moveTime =10.0/(Z_Feedrate/60)*1000;
+        //TODO set led-pins
         break;  
       case 3: 
           Z_distance = "20.0";// maximum Z-axis movement is 20mm not 100. We don't want to shoot it out of the MPCNC!
           Z_moveTime = 20.0/(Z_Feedrate/60)*1000;
           distance="100.0"; //set movement to 100
           XY_moveTime=100.0/(XY_Feedrate/60.0)*1000; //100mm, / (F2000[mm/min]/60[s/min])*1000[ms/s]
+          //TODO set led-pins
         break;  
     }
     if(speedToggle<3)

@@ -20,7 +20,7 @@ I thought this would be a piece of cake, but as always things didn't work as exp
     * Success in sending gcode "M117 Test" from USB-RS232 to RX1 on Marlin (2 days later... should've tried this earlier)
   * Why why why isn't Marlin working when sending gcode from UNO, but works when sending from USB-adapter?
     * I could confirm sending the correct message from UNO TX when connecting to USB-adapter RX
-    * Finally grabbed the multimeter and found out that the TX on the joystick shield that I was using had an voltage devider connected to it to take it down to something that an nrf24L01 wanted....... 
+    * Finally grabbed the multimeter and found out that the TX on the joystick shield that I was using had an voltage devider connected to it to take it down to something that an bluetooth wanted....... 
     * Connectin straight to the TX-pin on the shield was the key to get it working!
 
 #### Usage:

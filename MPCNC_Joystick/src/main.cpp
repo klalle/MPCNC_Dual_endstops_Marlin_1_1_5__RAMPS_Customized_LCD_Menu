@@ -66,21 +66,9 @@ int Z_moveTime=0;
 bool firstXMoveLeft=true;
 bool firstXMoveRight=true;
 
-int getAverage(int pin){
-  int a =0;
-  for(int i=0;i<10;i++){
-    a=a+analogRead(pin);
-    delay(20); 
-  }
-  return a/10;
-}
-
-void resetCoordinates(){
-  Serial.println("G92 X0 Y0 Z0");
-  Serial.println("M117 Home is set!");
-  delay(3000);
-  updateSpeedAndLabel=true; 
-}
+bool isPressed(int pin);
+bool isLongPressed(int pin);
+int getAverage(int pin);
 
 void setup() {
 
@@ -101,21 +89,6 @@ void setup() {
 
 }
 
-bool isLongPressed(int pin){
-  int c=0;
-    unsigned long startedWaiting = millis();
-    while(digitalRead(pin)==LOW && millis() - startedWaiting <= 1500){
-      delay(10);
-      c++;
-    }
-    if(c>150-1)
-      return true;
-    else
-      return false;
-}
-bool isPressed(int pin){
-  return digitalRead(pin)==LOW;
-}
 
 
 void loop() {
@@ -281,6 +254,33 @@ void loop() {
 
   }
 }
+
+bool isPressed(int pin){
+  return digitalRead(pin)==LOW;
+}
+
+bool isLongPressed(int pin){
+  int c=0;
+    unsigned long startedWaiting = millis();
+    while(digitalRead(pin)==LOW && millis() - startedWaiting <= 1500){
+      delay(10);
+      c++;
+    }
+    if(c>150-1)
+      return true;
+    else
+      return false;
+}
+
+int getAverage(int pin){
+  int a =0;
+  for(int i=0;i<10;i++){
+    a=a+analogRead(pin);
+    delay(20); 
+  }
+  return a/10;
+}
+
 
 //Serial event
 // void serialEvent() {

@@ -30,8 +30,6 @@ const int speedToggleBtn = PIN_BUTTON_F;
 
 boolean hxy = false; //define buttons_presed variables
 boolean hz = false;
-boolean rc = false;
-
 
 const int ledPin_01 = 9; // Analog output pin that the LED is attached to
 const int ledPin_1 = 10;
@@ -41,7 +39,6 @@ const int btnActivated = 13; //side button for activate unit or not (default = h
 
 int x=0; //initialize variables
 int y=0;
-int z=0;
 int t=0;
 String X_command = "";
 String Y_command = "";
@@ -53,10 +50,12 @@ int XY_Feedrate = 2000;
 int Z_Feedrate = 300;
 
 int speedToggle=1; // set 0.1mm,1, 10, 100
+bool activationBtnStatus = false;
 
 //String inputString = "";         // a string to hold incoming data
 //boolean stringComplete = false;  // whether the string is complete
 
+bool joystickIsActivated=false;
 bool updateSpeedAndLabel=true;
 
 int minTimeToReleaseBtnDelay = 500;
@@ -86,13 +85,34 @@ void setup() {
   delay(3000);
   zeroState_x = getAverage(x_Pin);
   zeroState_y = getAverage(y_Pin);
-
+  Serial.println("M117 Long-click joystick to enable!");
 }
 
 
 
 void loop() {
-  if(isPressed(btnActivated)){ //reversed... ON=high
+  if(activationBtnStatus && !isPressed(btnActivated)){ //just turned btn off
+    activationBtnStatus=false;
+    Serial.println("M117 Long-click joystick to enable!");
+  }
+  else if(!activationBtnStatus && isPressed(btnActivated)) //just turned btn on
+  {
+    activationBtnStatus=true;
+    updateSpeedAndLabel=true;
+    joystickIsActivated=false;
+    speedToggle=1;
+  }
+  else if(!activationBtnStatus && isLongPressed(joystickBtn)){ //btn=off, but using joystick to toggle on/off
+    joystickIsActivated=!joystickIsActivated;
+    if(!joystickIsActivated)
+      Serial.println("M117 Long-click joystick to enable!");
+    else{
+      updateSpeedAndLabel=true;
+      speedToggle=1;
+    }
+  }
+
+  if(!joystickIsActivated && !activationBtnStatus){
     //TODO set led-pin
     delay(20);
     return;
@@ -122,7 +142,7 @@ void loop() {
     updateSpeedAndLabel=true;
     delay(3000);
   }
-  if(isPressed(speedToggleBtn))
+  if(isPressed(speedToggleBtn)) //F-btn
   {
     speedToggle+=1;
     if(speedToggle>3)
@@ -136,28 +156,28 @@ void loop() {
     updateSpeedAndLabel=false;
     switch(speedToggle) {
       case 0:
-        distance="0.10"; //set movement to 0.1mm
+        distance="0.1"; //set movement to 0.1mm
         XY_moveTime=0.1/(XY_Feedrate/60)*1000;
         Z_moveTime =0.1/(Z_Feedrate/60)*1000;
         //TODO set led-pins
         break;
       case 1: 
-        distance="1.0"; //set movement to 1mm
+        distance="1"; //set movement to 1mm
         XY_moveTime=1.0/(XY_Feedrate/60)*1000;
         Z_moveTime =1.0/(Z_Feedrate/60)*1000;
         //TODO set led-pins
         break;  
       case 2: 
-        distance="10.0"; //set movement to 10mm
+        distance="10"; //set movement to 10mm
         XY_moveTime=10.0/(XY_Feedrate/60)*1000;
         Z_moveTime =10.0/(Z_Feedrate/60)*1000;
         //TODO set led-pins
         break;  
       case 3: 
-          Z_distance = "20.0";// maximum Z-axis movement is 20mm not 100. We don't want to shoot it out of the MPCNC!
+          Z_distance = "20";// maximum Z-axis movement is 20mm not 100. We don't want to shoot it out of the MPCNC!
           Z_moveTime = 20.0/(Z_Feedrate/60)*1000;
-          distance="100.0"; //set movement to 100
-          XY_moveTime=100.0/(XY_Feedrate/60.0)*1000; //100mm, / (F2000[mm/min]/60[s/min])*1000[ms/s]
+          distance="50"; //set movement to 50
+          XY_moveTime=50.0/(XY_Feedrate/60.0)*1000; //50mm, / (F2000[mm/min]/60[s/min])*1000[ms/s]
           //TODO set led-pins
         break;  
     }
@@ -170,9 +190,11 @@ void loop() {
     Serial.print(Z_distance);
     Serial.println("mm");
    
-    while(isPressed(home_xy)){delay(50);} //wait till released...
-    while(isPressed(home_z)){delay(50);} //wait till released...
-    while(isPressed(speedToggleBtn)){delay(50);} //wait till released...
+    //wait till btns released...
+    while(isPressed(home_xy)){delay(50);} 
+    while(isPressed(home_z)){delay(50);}
+    while(isPressed(speedToggleBtn)){delay(50);}
+    while(isPressed(joystickBtn)){delay(50);}
   }
 
   //Keep moving Z until btn is released, 

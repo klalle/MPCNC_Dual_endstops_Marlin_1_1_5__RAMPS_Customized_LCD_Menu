@@ -228,7 +228,6 @@ void loop() {
     else if (y > zeroState_y+treshold_y)
       Y_command = String(" Y" + distance);
 
-    long del=0;
     if(X_command !=" X0" || Y_command !=" Y0"){
       Serial.println("G91");
       Serial.print("G1");
@@ -239,15 +238,11 @@ void loop() {
       Serial.println("G90");
       
       if(XY_moveTime<minDelayBetweenMoves){
-        del=minDelayBetweenMoves;
+        delay(minDelayBetweenMoves);
         minDelayBetweenMoves-=50;
       }
       else
-        del=XY_moveTime;
-
-      if(X_command !=" X0" && Y_command !=" Y0")
-        del*=2;
-      delay(del);
+        delay(XY_moveTime);
     }
     else
       keepMoving=false;

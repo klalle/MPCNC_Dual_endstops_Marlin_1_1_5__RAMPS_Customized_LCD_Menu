@@ -205,8 +205,9 @@ void loop() {
     while(isPressed(speedToggleBtn)){delay(50);} //wait till released...
   }
 
+  //Keep moving Z until btn is released, 
+  //decrease delay for moves (movetime+paus) until calculated movetime=delay => speed up
   bool keepMoving=true; 
-  bool first=true;
   int minDelayBetweenMoves=minTimeToReleaseBtnDelay;
   while(keepMoving){
     Z_command =" Z0";
@@ -236,11 +237,11 @@ void loop() {
     else
       keepMoving=false;
 
-    first=false;
   }
 
+  //Keep movin in XY until jystick is released, 
+  //decrease delay for moves (movetime+paus) until calculated movetime=delay => speed up
   keepMoving=true; 
-  first=true;
   minDelayBetweenMoves=minTimeToReleaseBtnDelay;
   while(keepMoving){
     X_command =" X0";
@@ -280,8 +281,6 @@ void loop() {
     }
     else
       keepMoving=false;
-
-    first=false;
 
   }
 }

@@ -76,13 +76,10 @@ int getAverage(int pin){
 }
 
 void resetCoordinates(){
-  //Serial.begin(baud_rate); //open serial port
   Serial.println("G92 X0 Y0 Z0");
-  Serial.println("M300 S300 P1000");
   Serial.println("M117 Home is set!");
-  //Serial.end();//close serial port to avoid problems with Octoprint
   delay(3000);
-  updateSpeedAndLabel=true; //resets label...
+  updateSpeedAndLabel=true; 
 }
 
 void setup() {
@@ -96,7 +93,7 @@ void setup() {
   pinMode(PIN_BUTTON_J, INPUT_PULLUP);
   pinMode(btnActivated, INPUT_PULLUP);
 
-  Serial.begin(baud_rate);//open serial port
+  Serial.begin(baud_rate);
   
   delay(3000);
   zeroState_x = getAverage(x_Pin);
@@ -111,7 +108,7 @@ bool isLongPressed(int pin){
       delay(10);
       c++;
     }
-    if(c>150-1) //long press => 
+    if(c>150-1)
       return true;
     else
       return false;
@@ -123,7 +120,7 @@ bool isPressed(int pin){
 
 void loop() {
   if(isPressed(btnActivated)){ //reversed... ON=high
-  //TODO set led-pin
+    //TODO set led-pin
     delay(20);
     return;
   }else{

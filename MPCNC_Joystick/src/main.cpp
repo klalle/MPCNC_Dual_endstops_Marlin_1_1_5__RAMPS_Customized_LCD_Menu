@@ -57,7 +57,7 @@ int speedToggle=1; // set 0.1mm,1, 10, 100
 //String inputString = "";         // a string to hold incoming data
 //boolean stringComplete = false;  // whether the string is complete
 
-bool updateLabel=true;
+bool updateSpeedAndLabel=true;
 
 int minTimeToReleaseBtnDelay = 500;
 int XY_moveTime=0;
@@ -82,7 +82,7 @@ void resetCoordinates(){
   Serial.println("M117 Home is set!");
   //Serial.end();//close serial port to avoid problems with Octoprint
   delay(3000);
-  updateLabel=true; //resets label...
+  updateSpeedAndLabel=true; //resets label...
 }
 
 void setup() {
@@ -123,17 +123,17 @@ bool isPressed(int pin){
 
 void loop() {
   if(isPressed(btnActivated)){ //reversed... ON=high
-  //TODO set led-pins
+  //TODO set led-pin
     delay(20);
     return;
   }else{
-    //TODO set led-pins
+    //TODO set led-pin
   }
   if (isLongPressed(home_xy))
   {
     Serial.println("G28 X Y");
     Serial.println("M117 Homing XY...");
-    updateLabel=true;
+    updateSpeedAndLabel=true;
     delay(3000);
   }
 
@@ -141,15 +141,15 @@ void loop() {
   {
     Serial.println("G28 Z");
     Serial.println("M117 Homing Z...");
-    updateLabel=true;
+    updateSpeedAndLabel=true;
     delay(3000);
   }
 
   if (isLongPressed(setHomeHere))
   {
-    Serial.println("G28 X Y");
-    Serial.println("M117 Origo is reset!");
-    updateLabel=true;
+    Serial.println("G92 X0 Y0 Z0");
+    Serial.println("M117 Home is reset!");
+    updateSpeedAndLabel=true;
     delay(3000);
   }
   if(isPressed(speedToggleBtn))
@@ -157,13 +157,13 @@ void loop() {
     speedToggle+=1;
     if(speedToggle>3)
       speedToggle=0;
-    updateLabel=true;
+    updateSpeedAndLabel=true;
     delay(50);
   }
 
 
-  if(updateLabel){
-    updateLabel=false;
+  if(updateSpeedAndLabel){
+    updateSpeedAndLabel=false;
     switch(speedToggle) {
       case 0:
         distance="0.10"; //set movement to 0.1mm
@@ -239,7 +239,7 @@ void loop() {
 
   }
 
-  //Keep movin in XY until jystick is released, 
+  //Keep moving in XY until jystick is released, 
   //decrease delay for moves (movetime+paus) until calculated movetime=delay => speed up
   keepMoving=true; 
   minDelayBetweenMoves=minTimeToReleaseBtnDelay;
